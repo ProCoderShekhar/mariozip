@@ -1,0 +1,19 @@
+[
+    {
+        "uid": "e85fed63-1894-44bd-aa41-0618cbfd1a65",
+        "username": "mambear",
+        "favoriteGameId": "housegames:mines",
+        "favoriteGameTitle": "Mines",
+        "wagered": 0.01,
+        "weightedWagered": 0.01,
+        "rankLevel": 0,
+        "rankLevelImage": "https://roobet.com/immutable/rewards/levelcons/gold4.png",
+        "highestMultiplier": {
+            "multiplier": 0,
+            "wagered": 0.01,
+            "payout": 0,
+            "gameId": "housegames:towers",
+            "gameTitle": "Towers"
+        }
+    }
+]
