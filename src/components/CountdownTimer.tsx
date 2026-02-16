@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { cn } from '../lib/utils';
+
 
 interface TimeLeft {
     days: number;
