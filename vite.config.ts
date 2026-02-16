@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: true,
+    port: Number(process.env.PORT) || 5173,
     proxy: {
       '/api/connect': {
         target: 'https://roobetconnect.com',
