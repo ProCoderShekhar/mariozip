@@ -87,7 +87,12 @@ function maskUsername(username: string): string {
 }
 
 export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
-  const stats = await fetchAffiliateStats({ userId: USER_ID, sortBy: 'wagered' });
+  const stats = await fetchAffiliateStats({
+    userId: USER_ID,
+    sortBy: 'wagered',
+    startDate: '2026-03-01T00:00:00.000Z',
+    endDate: '2026-03-31T23:59:59.999Z'
+  });
   return stats.map((stat, index) => ({
     username: maskUsername(stat.username),
     wagered: stat.weightedWagered, // Use weighted wager for leaderboard

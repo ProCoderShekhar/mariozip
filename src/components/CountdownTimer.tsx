@@ -14,12 +14,10 @@ export function CountdownTimer() {
     useEffect(() => {
         const calculateTimeLeft = () => {
             const now = new Date();
-            const currentYear = now.getFullYear();
-            const currentMonth = now.getMonth();
 
-            // Target: Last day of the current month at 23:59:59
-            // new Date(year, month + 1, 0) gives the last day of the current month
-            const endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59);
+            // Target: March 31, 2026 at 23:59:59
+            // Month is 0-indexed, so March is 2
+            const endDate = new Date(2026, 2, 31, 23, 59, 59);
 
             const difference = endDate.getTime() - now.getTime();
 
