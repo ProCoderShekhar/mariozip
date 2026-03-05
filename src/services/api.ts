@@ -36,7 +36,7 @@ export interface AffiliateStats {
 // but mapped to the real API.
 
 const API_URL = '/api/connect/affiliate/v2/stats';
-const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjN2Y2NjcyLWZkOTItNDc5Yi05MDMzLTk3MzlkOTEzZDM3NCIsIm5vbmNlIjoiMGIxNmYxM2ItYzY1Ny00Mzg2LTg5MWMtZTBiZTMwM2U5OTVjIiwic2VydmljZSI6ImFmZmlsaWF0ZVN0YXRzIiwiaWF0IjoxNzUwODAzNzU0fQ.MM85GRm9fPJ2s_q1e37aWH-BIOhVCuW01nOgFW6-g4E';
+const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjN2Y2NjcyLWZkOTItNDc5Yi05MDMzLTk3MzlkOTEzZDM3NCIsIm5vbmNlIjoiZDUyMjgxNzUtZTRjNi00YzkwLThmZmEtNDBlN2ZiMGU2ODY4Iiwic2VydmljZSI6ImFmZmlsaWF0ZVN0YXRzIiwiaWF0IjoxNzcyNjkxNjM3fQ.Wg4Jlz0qkyYT5Of6pvgUG3nhRD6zLCFKDUfiHPxKv5Y';
 const USER_ID = '2c7f6672-fd92-479b-9033-9739d913d374';
 
 export const fetchAffiliateStats = async (params: AffiliateStatsParams = { userId: USER_ID }): Promise<AffiliateStats[]> => {
@@ -93,6 +93,10 @@ export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
     startDate: '2026-03-01T00:00:00.000Z',
     endDate: '2026-03-31T23:59:59.999Z'
   });
+
+  // Sort stats by weightedWagered in descending order
+  stats.sort((a, b) => b.weightedWagered - a.weightedWagered);
+
   return stats.map((stat, index) => ({
     username: maskUsername(stat.username),
     wagered: stat.weightedWagered, // Use weighted wager for leaderboard
