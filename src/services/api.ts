@@ -40,15 +40,17 @@ export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
       return [];
     }
 
-    const stats = data.affiliates.map((affiliate: any) => ({
+    const stats = data.affiliates.map((affiliate: { username: string; wagered_amount?: string | number }) => ({
       username: affiliate.username,
-      wagered: parseFloat(affiliate.wagered_amount || "0"),
+      wagered: typeof affiliate.wagered_amount === 'string'
+        ? parseFloat(affiliate.wagered_amount)
+        : (affiliate.wagered_amount || 0),
     }));
 
     // Sort stats by wagered in descending order
-    stats.sort((a: any, b: any) => b.wagered - a.wagered);
+    stats.sort((a: { wagered: number }, b: { wagered: number }) => b.wagered - a.wagered);
 
-    return stats.map((stat: any, index: number) => ({
+    return stats.map((stat: { username: string; wagered: number }, index: number) => ({
       username: maskUsername(stat.username),
       wagered: stat.wagered,
       rank: index + 1,
