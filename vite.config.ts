@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 // Mock Leaderboard API for Vite Dev Server
 const leaderboardDevPlugin = () => ({
