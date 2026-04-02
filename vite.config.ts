@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import 'dotenv/config'
 
 export default defineConfig({
   plugins: [react()],
@@ -16,7 +17,14 @@ export default defineConfig({
       '/roulobets-api': {
         target: 'https://api.roulobets.com',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/roulobets-api/, ''),
+        rewrite: (path) => {
+          const newPath = path.replace(/^\/roulobets-api/, '');
+          const apiKey = process.env.ROULOBETS_API_KEY;
+          if (apiKey) {
+            return newPath.includes('?') ? `${newPath}&key=${apiKey}` : `${newPath}?key=${apiKey}`;
+          }
+          return newPath;
+        },
         secure: false,
       },
       '/api/connect': {

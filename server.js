@@ -3,6 +3,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import 'dotenv/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,8 +17,13 @@ app.use(cors());
 app.use('/roulobets-api', createProxyMiddleware({
   target: 'https://api.roulobets.com',
   changeOrigin: true,
-  pathRewrite: {
-    '^/roulobets-api': '', // remove base path
+  pathRewrite: (path, req) => {
+    let newPath = path.replace(/^\/roulobets-api/, '');
+    const apiKey = process.env.ROULOBETS_API_KEY;
+    if (apiKey) {
+      newPath = newPath.includes('?') ? `${newPath}&key=${apiKey}` : `${newPath}?key=${apiKey}`;
+    }
+    return newPath;
   },
   secure: false,
 }));
