@@ -28,9 +28,21 @@ const leaderboardDevPlugin = () => ({
 
       const API_KEY = process.env.ROULOBETS_API_KEY;
       if (!API_KEY) {
-        console.error("Missing ROULOBETS_API_KEY environment variable");
-        res.statusCode = 500;
-        res.end(JSON.stringify({ error: 'Server configuration error' }));
+        console.warn("Missing ROULOBETS_API_KEY environment variable. Using sample data.");
+        try {
+          const fs = await import('fs/promises');
+          const path = await import('path');
+          const { fileURLToPath } = await import('url');
+          const __filename = fileURLToPath(import.meta.url);
+          const __dirname = path.dirname(__filename);
+          const sampleData = await fs.readFile(path.join(__dirname, 'api_response_sample.json'), 'utf-8');
+          res.setHeader('Content-Type', 'application/json');
+          res.end(sampleData);
+        } catch (err) {
+          console.error("Failed to read sample data:", err);
+          res.statusCode = 500;
+          res.end(JSON.stringify({ error: 'Server configuration error' }));
+        }
         return;
       }
 

@@ -32,8 +32,15 @@ app.get('/api/leaderboard', async (req, res) => {
 
   const API_KEY = process.env.ROULOBETS_API_KEY;
   if (!API_KEY) {
-    console.error("Missing ROULOBETS_API_KEY environment variable");
-    return res.status(500).json({ error: 'Server configuration error' });
+    console.warn("Missing ROULOBETS_API_KEY environment variable. Using sample data.");
+    try {
+      const fs = await import('fs/promises');
+      const sampleData = await fs.readFile(path.join(__dirname, 'api_response_sample.json'), 'utf-8');
+      return res.json(JSON.parse(sampleData));
+    } catch (err) {
+      console.error("Failed to read sample data:", err);
+      return res.status(500).json({ error: 'Server configuration error' });
+    }
   }
 
   const START_DATE = '2026-04-01';
