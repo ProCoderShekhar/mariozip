@@ -29,17 +29,37 @@ export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
 
     const data = await response.json();
 
-    // Roulobets API returns an object with an 'affiliates' array
-    if (!data || !data.affiliates || !Array.isArray(data.affiliates)) {
+    let dataArray = [];
+
+    // Check if the response is an array directly (like api_response_sample.json)
+    if (Array.isArray(data)) {
+      dataArray = data;
+    }
+    // Check if Roulobets API returns an object with an 'affiliates' array
+    else if (data && data.affiliates && Array.isArray(data.affiliates)) {
+      dataArray = data.affiliates;
+    } else {
       return [];
     }
 
-    const stats = data.affiliates.map((affiliate: { username: string; wagered_amount?: string | number }) => ({
-      username: affiliate.username,
-      wagered: typeof affiliate.wagered_amount === 'string'
-        ? parseFloat(affiliate.wagered_amount)
-        : (affiliate.wagered_amount || 0),
-    }));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stats = dataArray.map((affiliate: any) => {
+      let wageredVal = 0;
+      if (affiliate.wagered_amount !== undefined) {
+        wageredVal = typeof affiliate.wagered_amount === 'string'
+          ? parseFloat(affiliate.wagered_amount)
+          : affiliate.wagered_amount;
+      } else if (affiliate.wagered !== undefined) {
+        wageredVal = typeof affiliate.wagered === 'string'
+          ? parseFloat(affiliate.wagered)
+          : affiliate.wagered;
+      }
+
+      return {
+        username: affiliate.username,
+        wagered: wageredVal,
+      };
+    });
 
     // Sort stats by wagered in descending order
     stats.sort((a: { wagered: number }, b: { wagered: number }) => b.wagered - a.wagered);
