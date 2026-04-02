@@ -13,6 +13,12 @@ export default defineConfig({
     ],
 
     proxy: {
+      '/roulobets-api': {
+        target: 'https://api.roulobets.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/roulobets-api/, ''),
+        secure: false,
+      },
       '/api/connect': {
         target: 'https://roobetconnect.com',
         changeOrigin: true,
