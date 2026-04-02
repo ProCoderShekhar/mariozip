@@ -13,14 +13,8 @@ function maskUsername(username: string): string {
 }
 
 export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
-  // Note: VITE_API_KEY should be set in .env
-  const API_URL = import.meta.env.DEV ? '/roulobets-api/v1/external/affiliates' : 'https://api.roulobets.com/v1/external/affiliates';
-  const START_DATE = '2026-04-01';
-  const END_DATE = '2026-04-30';
-  const API_KEY = import.meta.env.VITE_API_KEY;
-
   try {
-    const response = await fetch(`${API_URL}?start_at=${START_DATE}&end_at=${END_DATE}&key=${API_KEY}`, {
+    const response = await fetch('/api/leaderboard', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

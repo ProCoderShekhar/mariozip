@@ -12,16 +12,61 @@ const PORT = process.env.PORT || 5173;
 
 app.use(cors());
 
-// Proxy endpoints
-app.use('/roulobets-api', createProxyMiddleware({
-  target: 'https://api.roulobets.com',
-  changeOrigin: true,
-  pathRewrite: {
-    '^/roulobets-api': '', // remove base path
-  },
-  secure: false,
-}));
+// Leaderboard Cache
+let leaderboardCache = {
+  data: null,
+  timestamp: 0
+};
+const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
 
+// Custom API endpoints
+app.get('/api/leaderboard', async (req, res) => {
+  const now = Date.now();
+
+  if (leaderboardCache.data && (now - leaderboardCache.timestamp) < CACHE_DURATION) {
+    return res.json(leaderboardCache.data);
+  }
+
+  const API_KEY = process.env.ROULOBETS_API_KEY;
+  if (!API_KEY) {
+    console.error("Missing ROULOBETS_API_KEY environment variable");
+    return res.status(500).json({ error: 'Server configuration error' });
+  }
+
+  const START_DATE = '2026-04-01';
+  const END_DATE = '2026-04-30';
+
+  try {
+    const fetch = (await import('node-fetch')).default || globalThis.fetch;
+    const response = await fetch(`https://api.roulobets.com/v1/external/affiliates?start_at=${START_DATE}&end_at=${END_DATE}&key=${API_KEY}`, {
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    leaderboardCache = {
+      data,
+      timestamp: now
+    };
+
+    res.json(data);
+  } catch (error) {
+    console.error("Failed to fetch leaderboard:", error);
+    // If cache exists, serve stale data on error
+    if (leaderboardCache.data) {
+      return res.json(leaderboardCache.data);
+    }
+    res.status(500).json({ error: 'Failed to fetch leaderboard data' });
+  }
+});
+
+// Proxy endpoints
 app.use('/api/connect', createProxyMiddleware({
   target: 'https://roobetconnect.com',
   changeOrigin: true,
