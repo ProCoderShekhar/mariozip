@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
+import fs from 'fs'
+import path from 'path'
 
 dotenv.config()
 
@@ -28,10 +30,19 @@ const leaderboardDevPlugin = () => ({
 
       const API_KEY = process.env.ROULOBETS_API_KEY;
       if (!API_KEY) {
-        console.error("Missing ROULOBETS_API_KEY environment variable");
-        res.statusCode = 500;
-        res.end(JSON.stringify({ error: 'Server configuration error' }));
-        return;
+        console.warn("Missing ROULOBETS_API_KEY environment variable, falling back to mock data");
+        try {
+          const mockDataPath = path.resolve(__dirname, 'api_response_sample.json');
+          const mockData = fs.readFileSync(mockDataPath, 'utf8');
+          res.setHeader('Content-Type', 'application/json');
+          res.end(mockData);
+          return;
+        } catch (err) {
+          console.error("Failed to read mock data:", err);
+          res.statusCode = 500;
+          res.end(JSON.stringify({ error: 'Server configuration error' }));
+          return;
+        }
       }
 
       const START_DATE = '2026-04-01';
