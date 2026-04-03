@@ -59,7 +59,7 @@ export function Hero() {
                         <Calendar className="w-5 h-5 text-blue-500" />
                         <div className="flex items-center gap-2 text-sm md:text-base">
                             <span className="text-white/40">Competition Period:</span>
-                            <span className="font-bold text-white">March 1 - March 31</span>
+                            <span className="font-bold text-white">April 1 - April 30</span>
                         </div>
                     </div>
                 </div>

@@ -29,7 +29,7 @@ function App() {
               <InfoSection title="Competition Period" icon={<Calendar className="w-6 h-6" />} className="pt-0">
                 <ul className="list-disc pl-5 space-y-2">
                   <li>Monthly competitions run from the 1st of each month to the 30th of the following month</li>
-                  <li>Current competition: <span className="text-red-500 font-semibold">March 01, 2026 - March 31, 2026</span></li>
+                  <li>Current competition: <span className="text-red-500 font-semibold">April 01, 2026 - April 30, 2026</span></li>
                   <li>Leaderboard resets automatically at the start of each new competition</li>
                   <li>Winners are announced within 48 hours of competition end</li>
                 </ul>
