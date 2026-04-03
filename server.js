@@ -4,7 +4,6 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import fs from 'fs';
 
 dotenv.config();
 
@@ -33,15 +32,8 @@ app.get('/api/leaderboard', async (req, res) => {
 
   const API_KEY = process.env.ROULOBETS_API_KEY;
   if (!API_KEY) {
-    console.warn("Missing ROULOBETS_API_KEY environment variable, falling back to mock data");
-    try {
-      const mockDataPath = path.join(__dirname, 'api_response_sample.json');
-      const mockData = JSON.parse(fs.readFileSync(mockDataPath, 'utf8'));
-      return res.json(mockData);
-    } catch (err) {
-      console.error("Failed to read mock data:", err);
-      return res.status(500).json({ error: 'Server configuration error' });
-    }
+    console.error("Missing ROULOBETS_API_KEY environment variable");
+    return res.status(500).json({ error: 'Server configuration error' });
   }
 
   const START_DATE = '2026-04-01';
