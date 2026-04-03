@@ -8,6 +8,11 @@ export default defineConfig({
     host: true,
     port: Number(process.env.PORT) || 5173,
 
+    // ✅ ADD THIS
+    allowedHosts: [
+      'mariozip.com'
+    ],
+
     proxy: {
       '/roulobets-api': {
         target: 'https://api.roulobets.com',
