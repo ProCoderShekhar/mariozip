@@ -24,16 +24,14 @@ export function Leaderboard() {
     };
 
     const getPrize = (rank: number) => {
-        if (rank === 1) return "$850.00";
-        if (rank === 2) return "$500.00";
-        if (rank === 3) return "$250.00";
-        if (rank === 4) return "$150.00";
-        if (rank === 5) return "$100.00";
-        if (rank === 6) return "$50.00";
-        if (rank === 7) return "$40.00";
-        if (rank === 8) return "$30.00";
-        if (rank === 9) return "$20.00";
-        if (rank === 10) return "$10.00";
+        if (rank === 1) return "$400.00";
+        if (rank === 2) return "$200.00";
+        if (rank === 3) return "$150.00";
+        if (rank === 4) return "$100.00";
+        if (rank === 5) return "$50.00";
+        if (rank === 6) return "$40.00";
+        if (rank >= 7 && rank <= 8) return "$20.00";
+        if (rank >= 9 && rank <= 10) return "$10.00";
         return "-";
     };
 

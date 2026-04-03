@@ -14,7 +14,7 @@ export function Hero() {
                             textShadow: '2px 2px 0px #e2e8f0, 4px 4px 0px #94a3b8, 8px 8px 0px #991b1b, 0px 0px 30px rgba(220, 38, 38, 0.8)',
                         }}
                     >
-                        $2000 MONTHLY
+                        $1000 MONTHLY
                     </span>
                     <span
                         className="text-white relative z-10 transition-all duration-500 hover:scale-110 hover:-rotate-1 cursor-default"
@@ -34,9 +34,9 @@ export function Hero() {
                                 leaderboardSection.scrollIntoView({ behavior: 'smooth' });
                             }
                         }}
-                        className="px-10 py-5 bg-gradient-to-r from-red-600 to-red-500 text-white font-black text-lg rounded-full hover:scale-105 hover:shadow-lg hover:shadow-red-500/30 transition-all duration-300 flex items-center gap-3 group border border-red-400/30"
+                        className="px-8 py-4 bg-white text-red-600 font-bold rounded-full hover:scale-105 hover:shadow-lg hover:shadow-white/20 transition-all duration-300 flex items-center gap-2 group"
                     >
-                        <span>VIEW LEADERBOARD</span>
+                        <span>View Leaderboard</span>
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
                             width="24" 
@@ -44,7 +44,7 @@ export function Hero() {
                             viewBox="0 0 24 24" 
                             fill="none" 
                             stroke="currentColor" 
-                            strokeWidth="2.5"
+                            strokeWidth="2" 
                             strokeLinecap="round" 
                             strokeLinejoin="round" 
                             className="group-hover:translate-y-1 transition-transform"
@@ -59,7 +59,7 @@ export function Hero() {
                         <Calendar className="w-5 h-5 text-blue-500" />
                         <div className="flex items-center gap-2 text-sm md:text-base">
                             <span className="text-white/40">Competition Period:</span>
-                            <span className="font-bold text-white">April 1 - April 30</span>
+                            <span className="font-bold text-white">March 1 - March 31</span>
                         </div>
                     </div>
                 </div>
