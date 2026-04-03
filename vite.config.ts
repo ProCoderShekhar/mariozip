@@ -4,14 +4,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    allowedHosts: ['mariozip.com'],
     host: true,
     port: Number(process.env.PORT) || 5173,
 
-    // ✅ ADD THIS
-    allowedHosts: [
-      'mariozip.com'
-    ],
+    allowedHosts: ['mariozip.com'], // ✅ only once
 
     proxy: {
       '/api/connect': {
