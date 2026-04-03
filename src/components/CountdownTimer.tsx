@@ -8,6 +8,21 @@ interface TimeLeft {
     seconds: number;
 }
 
+const TimeUnit = ({ value, label }: { value: number; label: string }) => (
+    <div className="flex flex-col items-center mx-2 md:mx-4">
+        <div className="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400 tabular-nums tracking-tight drop-shadow-sm">
+            {value.toString().padStart(2, '0')}
+        </div>
+        <div className="text-[10px] md:text-xs font-medium text-transparent bg-clip-text bg-gradient-to-b from-white/80 to-white/40 uppercase tracking-widest mt-2">
+            {label}
+        </div>
+    </div>
+);
+
+const Separator = () => (
+    <div className="text-3xl md:text-5xl font-light text-white/10 -mt-6">:</div>
+);
+
 export function CountdownTimer() {
     const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -15,9 +30,9 @@ export function CountdownTimer() {
         const calculateTimeLeft = () => {
             const now = new Date();
 
-            // Target: March 31, 2026 at 23:59:59
-            // Month is 0-indexed, so March is 2
-            const endDate = new Date(2026, 2, 31, 23, 59, 59);
+            // Target: April 30, 2026 at 23:59:59
+            // Month is 0-indexed, so April is 3
+            const endDate = new Date(2026, 3, 30, 23, 59, 59);
 
             const difference = endDate.getTime() - now.getTime();
 
@@ -38,21 +53,6 @@ export function CountdownTimer() {
 
         return () => clearInterval(timer);
     }, []);
-
-    const TimeUnit = ({ value, label }: { value: number; label: string }) => (
-        <div className="flex flex-col items-center mx-2 md:mx-4">
-            <div className="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400 tabular-nums tracking-tight drop-shadow-sm">
-                {value.toString().padStart(2, '0')}
-            </div>
-            <div className="text-[10px] md:text-xs font-medium text-transparent bg-clip-text bg-gradient-to-b from-white/80 to-white/40 uppercase tracking-widest mt-2">
-                {label}
-            </div>
-        </div>
-    );
-
-    const Separator = () => (
-        <div className="text-3xl md:text-5xl font-light text-white/10 -mt-6">:</div>
-    );
 
     return (
         <div className="w-full max-w-4xl mx-auto mb-20 animate-fade-in-up delay-300">
