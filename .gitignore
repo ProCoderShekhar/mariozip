@@ -2,8 +2,6 @@
 logs
 *.log
 npm-debug.log*
-.env
-.env.*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*

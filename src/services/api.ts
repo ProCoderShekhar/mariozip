@@ -1,29 +1,58 @@
-// Adapter for existing UI if it expects fetchLeaderboard
-export interface LeaderboardEntry {
+
+export interface AffiliateStatsParams {
+  userId: string;
+  startDate?: string;
+  endDate?: string;
+  gameIdentifiers?: string;
+  categories?: string;
+  providers?: string;
+  sortBy?: 'wagered' | 'highestMultiplier';
+}
+
+export interface HighestMultiplier {
+  multiplier: number;
+  wagered: number;
+  payout: number;
+  gameId: string;
+  gameTitle: string;
+}
+
+export interface AffiliateStats {
+  uid: string;
   username: string;
   wagered: number;
-  rank?: number;
-  favoriteGameTitle?: string;
-  highestMultiplier?: number;
+  favoriteGameId: string;
+  favoriteGameTitle: string;
+  weightedWagered: number;
+  rankLevel: number;
+  rankLevelImage: string;
+  highestMultiplier: HighestMultiplier;
 }
 
-function maskUsername(username: string): string {
-  if (!username) return 'Anonymous';
-  return username.charAt(0) + '*'.repeat(username.length - 1);
-}
+// Map the API response to the LeaderboardEntry interface expected by the UI if possible, 
+// or update the UI to use AffiliateStats. 
+// For now, I'll export the new types and the fetch function.
+// I will also keep a compatible 'fetchLeaderboard' for backward compatibility if needed, 
+// but mapped to the real API.
 
-export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
-  // Note: VITE_API_KEY should be set in .env
-  const API_URL = import.meta.env.DEV ? '/roulobets-api/v1/external/affiliates' : 'https://api.roulobets.com/v1/external/affiliates';
-  const START_DATE = '2026-04-01';
-  const END_DATE = '2026-04-30';
-  const API_KEY = import.meta.env.VITE_API_KEY;
+const API_URL = '/api/connect/affiliate/v2/stats';
+const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjN2Y2NjcyLWZkOTItNDc5Yi05MDMzLTk3MzlkOTEzZDM3NCIsIm5vbmNlIjoiZDUyMjgxNzUtZTRjNi00YzkwLThmZmEtNDBlN2ZiMGU2ODY4Iiwic2VydmljZSI6ImFmZmlsaWF0ZVN0YXRzIiwiaWF0IjoxNzcyNjkxNjM3fQ.Wg4Jlz0qkyYT5Of6pvgUG3nhRD6zLCFKDUfiHPxKv5Y';
+const USER_ID = '2c7f6672-fd92-479b-9033-9739d913d374';
+
+export const fetchAffiliateStats = async (params: AffiliateStatsParams = { userId: USER_ID }): Promise<AffiliateStats[]> => {
+  const queryAsync = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined) {
+      queryAsync.append(key, value);
+    }
+  });
 
   try {
-    const response = await fetch(`${API_URL}?start_at=${START_DATE}&end_at=${END_DATE}&key=${API_KEY}`, {
+    const response = await fetch(`${API_URL}?${queryAsync.toString()}`, {
       method: 'GET',
       headers: {
-        'Accept': 'application/json',
+        'Authorization': `Bearer ${API_TOKEN}`,
+        'Content-Type': 'application/json',
       },
     });
 
@@ -34,27 +63,45 @@ export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
     }
 
     const data = await response.json();
-
-    // Roulobets API returns an object with an 'affiliates' array
-    if (!data || !data.affiliates || !Array.isArray(data.affiliates)) {
-      return [];
-    }
-
-    const stats = data.affiliates.map((affiliate: any) => ({
-      username: affiliate.username,
-      wagered: parseFloat(affiliate.wagered_amount || "0"),
-    }));
-
-    // Sort stats by wagered in descending order
-    stats.sort((a: any, b: any) => b.wagered - a.wagered);
-
-    return stats.map((stat: any, index: number) => ({
-      username: maskUsername(stat.username),
-      wagered: stat.wagered,
-      rank: index + 1,
-    }));
+    return data;
   } catch (error) {
     console.error("Failed to fetch affiliate stats:", error);
     return [];
   }
+};
+
+// Adapter for existing UI if it expects fetchLeaderboard
+export interface LeaderboardEntry {
+  username: string;
+  wagered: number;
+  rank?: number;
+  // Add other fields as needed
+  favoriteGameTitle?: string;
+  highestMultiplier?: number;
+}
+
+
+function maskUsername(username: string): string {
+  if (!username) return 'Anonymous';
+  return username.charAt(0) + '*'.repeat(username.length - 1);
+}
+
+export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
+  const stats = await fetchAffiliateStats({
+    userId: USER_ID,
+    sortBy: 'wagered',
+    startDate: '2026-03-01T00:00:00.000Z',
+    endDate: '2026-03-31T23:59:59.999Z'
+  });
+
+  // Sort stats by weightedWagered in descending order
+  stats.sort((a, b) => b.weightedWagered - a.weightedWagered);
+
+  return stats.map((stat, index) => ({
+    username: maskUsername(stat.username),
+    wagered: stat.weightedWagered, // Use weighted wager for leaderboard
+    rank: index + 1,
+    favoriteGameTitle: stat.favoriteGameTitle,
+    highestMultiplier: stat.highestMultiplier?.multiplier
+  }));
 }
