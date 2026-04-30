@@ -90,8 +90,8 @@ export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
   const stats = await fetchAffiliateStats({
     userId: USER_ID,
     sortBy: 'wagered',
-    startDate: '2026-04-01T00:00:00.000Z',
-    endDate: '2026-04-30T23:59:59.999Z'
+    startDate: '2026-05-01T00:00:00.000Z',
+    endDate: '2026-05-31T23:59:59.999Z'
   });
 
   // Sort stats by weightedWagered in descending order
