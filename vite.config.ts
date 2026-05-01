@@ -7,8 +7,26 @@ export default defineConfig({
     host: true,
     port: Number(process.env.PORT) || 5173,
 
-    allowedHosts: ['mariozip.com'], // ✅ only once
+    allowedHosts: ['mariozip.com', '.onrender.com'], // ✅ only once
 
+    proxy: {
+      '/api/connect': {
+        target: 'https://roobetconnect.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/connect/, ''),
+        secure: false,
+      },
+      '/api': {
+        target: 'https://roobet.com',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
+  preview: {
+    host: true,
+    port: Number(process.env.PORT) || 5173,
+    allowedHosts: ['mariozip.com', '.onrender.com'],
     proxy: {
       '/api/connect': {
         target: 'https://roobetconnect.com',

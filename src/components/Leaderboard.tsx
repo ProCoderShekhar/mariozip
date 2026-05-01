@@ -10,8 +10,13 @@ export function Leaderboard() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        console.log('[Leaderboard] Component mounted. Fetching leaderboard data...');
         fetchLeaderboard().then(data => {
+            console.log(`[Leaderboard] Data fetched successfully. Total entries: ${data.length}`);
             setData(data);
+            setLoading(false);
+        }).catch(err => {
+            console.error('[Leaderboard] Error fetching leaderboard data:', err);
             setLoading(false);
         });
     }, []);
