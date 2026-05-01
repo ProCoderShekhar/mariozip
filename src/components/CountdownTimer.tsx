@@ -32,7 +32,7 @@ export function CountdownTimer() {
 
             // Target: May 31, 2026 at 23:59:59
             // Month is 0-indexed, so May is 4
-            const endDate = new Date(2026, 5, 31, 23, 59, 59);
+            const endDate = new Date(2026, 4, 31, 23, 59, 59);
 
             const difference = endDate.getTime() - now.getTime();
 
