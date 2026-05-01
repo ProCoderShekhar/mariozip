@@ -48,7 +48,9 @@ export const fetchAffiliateStats = async (params: AffiliateStatsParams = { userI
   });
 
   try {
-    const response = await fetch(`${API_URL}?${queryAsync.toString()}`, {
+    const fetchUrl = `${API_URL}?${queryAsync.toString()}`;
+    console.log(`[API] Fetching affiliate stats from URL:`, fetchUrl);
+    const response = await fetch(fetchUrl, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${API_TOKEN}`,
@@ -58,14 +60,15 @@ export const fetchAffiliateStats = async (params: AffiliateStatsParams = { userI
 
     if (!response.ok) {
       const text = await response.text();
-      console.error(`API Error: ${response.status} ${response.statusText}`, text);
+      console.error(`[API] Error response: ${response.status} ${response.statusText}`, text);
       throw new Error(`API Error: ${response.statusText}`);
     }
 
     const data = await response.json();
+    console.log(`[API] Fetched affiliate stats successfully. Array length:`, Array.isArray(data) ? data.length : 'Not an array');
     return data;
   } catch (error) {
-    console.error("Failed to fetch affiliate stats:", error);
+    console.error("[API] Failed to fetch affiliate stats:", error);
     return [];
   }
 };
